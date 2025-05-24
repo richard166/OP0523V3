@@ -11,11 +11,22 @@ from urllib3.util.retry import Retry
 
 import src.config as config
 
+logging.getLogger("urllib3").setLevel(logging.ERROR)
+
+GLOBAL_VERIFY_SSL = True
+
 _session = requests.Session()
-_retry = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+_retry = Retry(total=1, connect=0, read=0, backoff_factor=0.3)
 _adapter = HTTPAdapter(max_retries=_retry)
 _session.mount("http://", _adapter)
 _session.mount("https://", _adapter)
+
+
+def _auto_ssl_flag(url: str) -> bool:
+    from urllib.parse import urlparse
+
+    host = urlparse(url).hostname or ""
+    return host not in config.SSL_SKIP_HOSTS
 
 
 def get_session() -> requests.Session:
@@ -23,9 +34,14 @@ def get_session() -> requests.Session:
     return _session
 
 
-def make_request(url: str, **kwargs) -> requests.Response:
-    headers = kwargs.pop('headers', config.HEADERS)
-    response = _session.get(url, headers=headers, timeout=30, **kwargs)
+def make_request(url: str, *, verify_ssl: bool | None = None, **kwargs) -> requests.Response:
+    headers = kwargs.pop("headers", config.HEADERS)
+    if verify_ssl is None:
+        verify_ssl = _auto_ssl_flag(url)
+    verify_ssl = verify_ssl and GLOBAL_VERIFY_SSL
+    response = _session.get(
+        url, headers=headers, timeout=10, verify=verify_ssl, **kwargs
+    )
     response.raise_for_status()
     return response
 

@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 from pathlib import Path
+import argparse
 
 import pandas as pd
 
@@ -51,4 +52,8 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--no-ssl', action='store_true')
+    args = parser.parse_args()
+    utils.GLOBAL_VERIFY_SSL = not args.no_ssl
     main()

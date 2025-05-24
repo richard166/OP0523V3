@@ -2,12 +2,18 @@ import logging
 import re
 import urllib.parse
 
+from .. import config
 from ..utils import get_session
 
 EMAIL_RE = re.compile(r"[\w\.-]+@[\w\.-]+\.[A-Za-z]{2,}")
 
 
 def extract(url: str) -> str | None:
+    host = urllib.parse.urlparse(url).hostname or ""
+    for bad in config.BAD_DOMAINS:
+        if host == bad or host.endswith("." + bad):
+            return None
+
     sess = get_session()
     pages = [
         url,

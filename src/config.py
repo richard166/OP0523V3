@@ -18,3 +18,9 @@ KEYWORDS = ["廣告代理商", "品牌設計", "行銷公司", "保健品", "生
 CITIES = ["台北", "新北", "桃園", "台中", "台南", "高雄"]
 
 HEADERS = {"User-Agent": USER_AGENT}
+
+# hosts with problematic SSL; requests to these will skip certificate validation
+SSL_SKIP_HOSTS = {"vsun.com.tw", "chuanyi1995.com"}
+
+# domains to ignore when trying to extract emails
+BAD_DOMAINS = {"blog.xuite.net", "pixnet.net"}
