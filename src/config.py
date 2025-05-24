@@ -1,11 +1,7 @@
 from pathlib import Path
 
 # General configuration for crawler
-USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/124.0 Safari/537.36"
-)
+USER_AGENT = "OP0523V3-Crawler/1.0 (+mailto:you@example.com)"
 
 DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
 OUTPUT_DIR = Path(__file__).resolve().parents[1] / 'csv' / 'output'
