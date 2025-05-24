@@ -8,6 +8,13 @@ This project collects company contact information from multiple Taiwan-based sou
 - **TFDA 健康食品許可證名單**
 - **TFDA 化粧品 GMP 名單**
 
+## 需要
+* Python 3.10+
+* Google Places API KEY → `.env`
+* `pip install -r requirements.txt`
+
+## 執行
+=======
 ## Usage
 Run the crawler manually:
 

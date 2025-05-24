@@ -14,8 +14,13 @@ import src.config as config
 _session = requests.Session()
 _retry = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
 _adapter = HTTPAdapter(max_retries=_retry)
-_session.mount('http://', _adapter)
-_session.mount('https://', _adapter)
+_session.mount("http://", _adapter)
+_session.mount("https://", _adapter)
+
+
+def get_session() -> requests.Session:
+    """Return shared HTTP session with retry configured."""
+    return _session
 
 
 def make_request(url: str, **kwargs) -> requests.Response:
@@ -31,10 +36,21 @@ def detect_encoding(data: bytes) -> str:
     return enc or 'utf-8'
 
 
-def read_table(path: Path) -> pd.DataFrame:
-    if path.suffix.lower() == '.xlsx':
-        return pd.read_excel(path)
-    data = path.read_bytes()
+def read_table(src: Path | bytes, filename: str | None = None) -> pd.DataFrame:
+    """Read CSV/XLSX content from path or raw bytes."""
+
+    if isinstance(src, (str, Path)):
+        path = Path(src)
+        if path.suffix.lower() == ".xlsx":
+            return pd.read_excel(path)
+        data = path.read_bytes()
+        enc = detect_encoding(data)
+        return pd.read_csv(BytesIO(data), encoding=enc)
+
+    # src 為 bytes
+    data = src
+    if filename and filename.lower().endswith(".xlsx"):
+        return pd.read_excel(BytesIO(data))
     enc = detect_encoding(data)
     return pd.read_csv(BytesIO(data), encoding=enc)
 
@@ -54,3 +70,18 @@ def to_e164(phone: str) -> str | None:
 def load_sample(filename: str) -> bytes:
     path = config.DATA_DIR / filename
     return path.read_bytes()
+
+def merge_sources(datasets: list[pd.DataFrame | list]) -> pd.DataFrame:
+    frames = []
+    for d in datasets:
+        if isinstance(d, pd.DataFrame):
+            frames.append(d)
+        else:
+            frames.append(pd.DataFrame(d))
+    if not frames:
+        return pd.DataFrame(columns=list(config.REQUIRED_COLS) + ["分類"])
+    df = pd.concat(frames, ignore_index=True)
+    df["電話"] = df["電話"].apply(to_e164)
+    df = df.drop_duplicates(subset=["公司名稱", "電話"])
+    return df
+
