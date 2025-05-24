@@ -1,27 +1,22 @@
-import argparse, logging, sys
+import logging
+import argparse
 from datetime import datetime
-from pathlib import Path
 
 import pandas as pd
 
 from src import config, utils
-from src.utils import setup_logger     # ← 修正路徑
-from .sources import (
-    opendata_company,
-    website_email,
-)
+from src.sources import four_a, google_places, website_email
 
-def parse_args():
-    p = argparse.ArgumentParser()
-    p.add_argument('-v', '--verbose', action='store_true',
-                   help='show DEBUG messages')
-    p.add_argument('--log', type=Path, help='log file path')
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="TW company contacts crawler")
+    p.add_argument("-v", "--verbose", action="store_true", help="顯示 DEBUG 訊息")
+    p.add_argument("--log", metavar="FILE", help="將 log 另存檔案")
     return p.parse_args()
 
 
 def main() -> None:
     datasets = []
-    for source in [opendata_company]:
+    for source in [four_a, google_places]:
         try:
             df = source.crawl()
             logging.info('%s entries: %d', source.__name__, len(df))
@@ -47,5 +42,5 @@ def main() -> None:
 
 if __name__ == '__main__':
     args = parse_args()
-    setup_logger(args.verbose, args.log)
+    utils.setup_logger(args.verbose, args.log)
     main()

@@ -15,19 +15,22 @@ import src.config as config
 logging.getLogger("urllib3").setLevel(logging.ERROR)
 
 
-def setup_logger(verbose: bool = False, logfile: Path | None = None):
-    """Init root logger; return the logger."""
+def setup_logger(verbose: bool = False, log_file: str | None = None) -> None:
+    """
+    初始化 logging
+        verbose=True  → DEBUG 等級；否則 INFO
+        log_file      → 指定檔案另存，UTF-8
+    """
     handlers: list[logging.Handler] = [logging.StreamHandler(sys.stdout)]
-    if logfile:
-        handlers.append(logging.FileHandler(logfile, encoding='utf-8'))
+    if log_file:
+        handlers.append(logging.FileHandler(log_file, encoding="utf-8"))
 
     logging.basicConfig(
         level=logging.DEBUG if verbose else logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
+        format="%(asctime)s %(levelname)s %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
         handlers=handlers,
-        force=True,
     )
-    return logging.getLogger()
 
 GLOBAL_VERIFY_SSL = True
 
