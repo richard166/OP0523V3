@@ -1,14 +1,22 @@
-import logging
+import argparse, logging, sys
 from datetime import datetime
-import argparse
+from pathlib import Path
 
 import pandas as pd
 
-from . import config, utils
+from src import config, utils
+from utils import setup_logger
 from .sources import (
     opendata_company,
     website_email,
 )
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument('-v', '--verbose', action='store_true',
+                   help='show DEBUG messages')
+    p.add_argument('--log', type=Path, help='log file path')
+    return p.parse_args()
 
 
 def main() -> None:
@@ -38,12 +46,6 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--no-ssl', action='store_true')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Show debug logs')
-    parser.add_argument('--log', help='Path to log file')
-    args = parser.parse_args()
-
-    utils.setup_logger(verbose=args.verbose, log_file=args.log)
-    utils.GLOBAL_VERIFY_SSL = not args.no_ssl
+    args = parse_args()
+    setup_logger(args.verbose, args.log)
     main()
