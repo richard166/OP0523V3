@@ -20,3 +20,21 @@ The result will be saved under `csv/output/` with the current date.
 
 ## GitHub Actions
 A workflow runs every Monday at 01:00 UTC to execute the crawler automatically.
+
+## Fetching by Business Number
+
+If you only need data for specific companies, the script
+`company_api_crawler/fetch_by_id.py` can query the OpenData VIP API using a list
+of business numbers:
+
+```bash
+python company_api_crawler/fetch_by_id.py 13133518 16669823
+```
+
+You may also pass a text file containing one ID per line:
+
+```bash
+python company_api_crawler/fetch_by_id.py -f ids.txt
+```
+
+The resulting CSV will be stored under `company_api_crawler/data/output/`.
