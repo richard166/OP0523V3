@@ -3,7 +3,7 @@
 This project collects company contact information from multiple Taiwan-based sources and merges them into a single CSV file.
 
 ## Sources
-- **OpenData VIP 公司資料**
+- **OpenData VIP 公司 API**
 
 ## 需要
 * Python 3.10+

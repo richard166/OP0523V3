@@ -8,6 +8,8 @@ from src import config, utils
 from src.utils import setup_logger
 from src.sources import opendata_company, website_email
 
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description="TW company contacts crawler")
     p.add_argument("-v", "--verbose", action="store_true", help="顯示 DEBUG 訊息")
@@ -17,7 +19,9 @@ def main() -> None:
     setup_logger(args.verbose, args.log)
 
     datasets = []
+
     for source in [opendata_company]:
+
         try:
             df = source.crawl()
             logging.info('%s entries: %d', source.__name__, len(df))
