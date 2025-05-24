@@ -118,7 +118,14 @@ def merge_sources(datasets: list[pd.DataFrame | list]) -> pd.DataFrame:
             frames.append(pd.DataFrame(d))
     if not frames:
         return pd.DataFrame(columns=list(config.REQUIRED_COLS) + ["分類"])
+
     df = pd.concat(frames, ignore_index=True)
+
+    # ensure required columns exist even if some sources produced no records
+    for col in config.REQUIRED_COLS:
+        if col not in df.columns:
+            df[col] = None
+
     df["電話"] = df["電話"].apply(to_e164)
     df = df.drop_duplicates(subset=["公司名稱", "電話"])
     return df
