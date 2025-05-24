@@ -1,7 +1,7 @@
 requests
 beautifulsoup4
 pandas
-tqdm
+tqdm>=4.66
 bs4
 chardet
 phonenumbers
