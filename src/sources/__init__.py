@@ -1,6 +1,5 @@
 from . import (
     four_a,
-    google_places,
     tfda_health_food,
     tfda_health_gmp,
     tfda_cosmetic_gmp,
@@ -10,7 +9,6 @@ from . import (
 
 __all__ = [
     'four_a',
-    'google_places',
     'tfda_health_food',
     'tfda_health_gmp',
     'tfda_cosmetic_gmp',

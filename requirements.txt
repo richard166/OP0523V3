@@ -4,7 +4,6 @@ pandas
 tqdm
 bs4
 chardet
-googlemaps
 phonenumbers
 tldextract
 python-dotenv
