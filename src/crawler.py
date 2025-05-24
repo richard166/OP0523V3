@@ -11,6 +11,7 @@ from .sources import (
     google_places,
     tfda_health_food,
     tfda_cosmetics_gmp,
+    opendata_company,
     tfda_health_gmp,
     tfda_cosmetic_gmp,
     website_email,
@@ -21,7 +22,13 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def main() -> None:
     datasets = []
-    for source in [four_a, google_places, tfda_health_food, tfda_cosmetics_gmp]:
+    for source in [
+        four_a,
+        google_places,
+        tfda_health_food,
+        tfda_cosmetics_gmp,
+        opendata_company,
+    ]:
         try:
             df = source.crawl()
             logging.info('%s entries: %d', source.__name__, len(df))

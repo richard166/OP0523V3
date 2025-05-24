@@ -5,6 +5,7 @@ from . import (
     tfda_health_gmp,
     tfda_cosmetic_gmp,
     website_email,
+    opendata_company,
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     'tfda_health_gmp',
     'tfda_cosmetic_gmp',
     'website_email',
+    'opendata_company',
 ]
