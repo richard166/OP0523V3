@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from tqdm import tqdm
 
 from .. import config
 
@@ -86,7 +87,7 @@ def _fetch_detail(url: str, sess: requests.Session) -> tuple[str | None, str | N
 def crawl(keyword: str) -> pd.DataFrame:
     sess = _build_session()
     rows = _fetch_list(keyword, sess)
-    for row in rows:
+    for row in tqdm(rows, desc="Detail"):
         phone, email, website = _fetch_detail(row.pop("info_url"), sess)
         row.update({"電話": phone, "Email": email, "官網": website})
     df = pd.DataFrame(rows)

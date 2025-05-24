@@ -13,6 +13,19 @@ import src.config as config
 
 logging.getLogger("urllib3").setLevel(logging.ERROR)
 
+
+def setup_logger(verbose: bool = False, log_file: str | None = None) -> None:
+    """Configure root logger with console/file handlers."""
+    level = logging.DEBUG if verbose else logging.INFO
+    handlers: list[logging.Handler] = [logging.StreamHandler()]
+    if log_file:
+        handlers.append(logging.FileHandler(log_file))
+    logging.basicConfig(
+        level=level,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=handlers,
+    )
+
 GLOBAL_VERIFY_SSL = True
 
 _session = requests.Session()

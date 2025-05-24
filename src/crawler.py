@@ -1,44 +1,25 @@
 import logging
 from datetime import datetime
-from pathlib import Path
 import argparse
 
 import pandas as pd
 
 from . import config, utils
 from .sources import (
-    four_a,
-    tfda_health_food,
-    tfda_cosmetics_gmp,
     opendata_company,
-    tfda_health_gmp,
-    tfda_cosmetic_gmp,
     website_email,
 )
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def main() -> None:
     datasets = []
-    for source in [
-        four_a,
-        tfda_health_food,
-        tfda_cosmetics_gmp,
-        opendata_company,
-    ]:
+    for source in [opendata_company]:
         try:
             df = source.crawl()
             logging.info('%s entries: %d', source.__name__, len(df))
             datasets.append(df)
         except Exception as e:
             logging.warning('%s failed: %s', source.__name__, e)
-
-    for fetcher in [tfda_health_gmp.fetch, tfda_cosmetic_gmp.fetch]:
-        try:
-            datasets.append(pd.DataFrame(fetcher()))
-        except Exception as e:
-            logging.warning('%s failed: %s', fetcher.__module__, e)
 
     if datasets:
         all_df = utils.merge_sources(datasets)
@@ -59,6 +40,10 @@ def main() -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--no-ssl', action='store_true')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Show debug logs')
+    parser.add_argument('--log', help='Path to log file')
     args = parser.parse_args()
+
+    utils.setup_logger(verbose=args.verbose, log_file=args.log)
     utils.GLOBAL_VERIFY_SSL = not args.no_ssl
     main()

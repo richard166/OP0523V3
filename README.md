@@ -3,9 +3,7 @@
 This project collects company contact information from multiple Taiwan-based sources and merges them into a single CSV file.
 
 ## Sources
-- **4A 協會會員名錄**
-- **TFDA 健康食品許可證名單**
-- **TFDA 化粧品 GMP 名單**
+- **OpenData VIP 公司資料**
 
 ## 需要
 * Python 3.10+
