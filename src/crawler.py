@@ -6,7 +6,7 @@ import pandas as pd
 
 from src import config, utils
 from src.utils import setup_logger
-from src.sources import opendata_company, website_email
+from src.sources import opendata_api, website_email
 
 
 
@@ -20,7 +20,7 @@ def main() -> None:
 
     datasets = []
 
-    for source in [opendata_company]:
+    for source in [opendata_api]:
 
         try:
             df = source.crawl()

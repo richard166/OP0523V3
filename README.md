@@ -1,6 +1,6 @@
 # Taiwan Company Contacts Crawler
 
-This project collects company contact information from multiple Taiwan-based sources and merges them into a single CSV file.
+This project collects company contact information from the OpenData VIP API and merges the results into a single CSV file.
 
 ## Sources
 - **OpenData VIP 公司 API**

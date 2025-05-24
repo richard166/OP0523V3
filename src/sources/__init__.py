@@ -1,8 +1,8 @@
 
-from . import website_email, opendata_company
+from . import website_email, opendata_api
 
 __all__ = [
     'website_email',
-    'opendata_company',
+    'opendata_api',
 
 ]
