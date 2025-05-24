@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 # General configuration for crawler
@@ -10,8 +9,6 @@ USER_AGENT = (
 
 DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
 OUTPUT_DIR = Path(__file__).resolve().parents[1] / 'csv' / 'output'
-
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 REQUIRED_COLS = ("公司名稱", "電話", "Email", "官網")
 KEYWORDS = ["廣告代理商", "品牌設計", "行銷公司", "保健品", "生技", "生物科技"]

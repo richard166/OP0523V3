@@ -8,7 +8,6 @@ import pandas as pd
 from . import config, utils
 from .sources import (
     four_a,
-    google_places,
     tfda_health_food,
     tfda_cosmetics_gmp,
     opendata_company,
@@ -24,7 +23,6 @@ def main() -> None:
     datasets = []
     for source in [
         four_a,
-        google_places,
         tfda_health_food,
         tfda_cosmetics_gmp,
         opendata_company,
