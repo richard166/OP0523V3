@@ -1,5 +1,4 @@
-import logging
-import sys
+import logging, sys, time
 from pathlib import Path
 from io import BytesIO
 
@@ -15,22 +14,23 @@ import src.config as config
 logging.getLogger("urllib3").setLevel(logging.ERROR)
 
 
-def setup_logger(verbose: bool = False, log_file: str | None = None) -> None:
-    """
-    初始化 logging
-        verbose=True  → DEBUG 等級；否則 INFO
-        log_file      → 指定檔案另存，UTF-8
-    """
+def setup_logger(verbose: bool, log_file: str | None) -> None:
+    """統一初始化 logging──console 立即 flush，再選擇性寫檔"""
+    level = logging.DEBUG if verbose else logging.INFO
     handlers: list[logging.Handler] = [logging.StreamHandler(sys.stdout)]
     if log_file:
         handlers.append(logging.FileHandler(log_file, encoding="utf-8"))
 
     logging.basicConfig(
-        level=logging.DEBUG if verbose else logging.INFO,
-        format="%(asctime)s %(levelname)s %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        level=level,
         handlers=handlers,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%H:%M:%S",
+        force=True,
     )
+
+# -----------------------------------------------------------------------------
+# 以下原本就有的程式碼
 
 GLOBAL_VERIFY_SSL = True
 
@@ -58,10 +58,13 @@ def make_request(url: str, *, verify_ssl: bool | None = None, **kwargs) -> reque
     if verify_ssl is None:
         verify_ssl = _auto_ssl_flag(url)
     verify_ssl = verify_ssl and GLOBAL_VERIFY_SSL
+    t0 = time.perf_counter()
     response = _session.get(
-        url, headers=headers, timeout=10, verify=verify_ssl, **kwargs
+        url, headers=headers, timeout=15, verify=verify_ssl, **kwargs
     )
     response.raise_for_status()
+    dt = time.perf_counter() - t0
+    logging.debug("GET %s  %.2fs  %s", url, dt, response.status_code)
     return response
 
 
