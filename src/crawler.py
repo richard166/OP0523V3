@@ -6,7 +6,7 @@ import pandas as pd
 
 from src import config, utils
 from src.utils import setup_logger
-from src.sources import four_a, google_places, website_email
+from src.sources import four_a, website_email
 
 def main() -> None:
     p = argparse.ArgumentParser(description="TW company contacts crawler")
@@ -17,7 +17,7 @@ def main() -> None:
     setup_logger(args.verbose, args.log)
 
     datasets = []
-    for source in [four_a, google_places]:
+    for source in [four_a]:
         try:
             df = source.crawl()
             logging.info('%s entries: %d', source.__name__, len(df))
