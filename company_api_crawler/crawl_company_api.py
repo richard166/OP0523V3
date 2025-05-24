@@ -6,7 +6,7 @@
     python crawl_company_api.py 關鍵字1 關鍵字2 ...
 """
 from __future__ import annotations
-import argparse, json, logging, time
+import argparse, json, logging, time, random
 from pathlib import Path
 from typing import List
 
@@ -14,11 +14,15 @@ import pandas as pd
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from urllib.robotparser import RobotFileParser
 from tqdm import tqdm
 
 BASE = "https://opendata.vip/data/company"
 DATA_DIR = Path(__file__).parent / "data" / "output"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+USER_AGENT = "OP0523V3-Crawler/1.0 (+mailto:you@example.com)"
+ROBOTS_URL = "https://www.opendata.vip/robots.txt"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -33,6 +37,7 @@ def build_session() -> requests.Session:
         status_forcelist=[429, 500, 502, 503, 504],
     )
     s.mount("https://", HTTPAdapter(max_retries=retry))
+    s.headers.update({"User-Agent": USER_AGENT})
     return s
 
 def query(keyword: str, sess: requests.Session) -> List[dict]:
@@ -46,10 +51,22 @@ def query(keyword: str, sess: requests.Session) -> List[dict]:
 
 def crawl(keywords: List[str]) -> pd.DataFrame:
     sess = build_session()
+    rp = RobotFileParser(ROBOTS_URL)
+    try:
+        rp.read()
+    except Exception as e:
+        logging.warning("robots.txt 讀取失敗：%s", e)
+        rp = None
+    delay = rp.crawl_delay(USER_AGENT) if rp else None
+    if delay is None:
+        delay = 1.0
     rows: list[dict] = []
     for kw in tqdm(keywords, desc="Query"):
+        if rp and not rp.can_fetch(USER_AGENT, BASE):
+            logging.warning("robots.txt 不允許存取 %s", BASE)
+            break
         rows += query(kw, sess)
-        time.sleep(0.3)       # 很輕量的 polite delay
+        time.sleep(delay + random.uniform(0, 0.5))
     if not rows:
         return pd.DataFrame()
     df = pd.json_normalize(rows).drop_duplicates("Business_Accounting_NO")
