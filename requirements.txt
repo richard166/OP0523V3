@@ -1,0 +1,8 @@
+requests
+beautifulsoup4
+pandas
+chardet
+googlemaps
+phonenumbers
+tldextract
+python-dotenv
