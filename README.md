@@ -16,6 +16,13 @@ Run the crawler manually:
 python -m src.crawler
 ```
 
+To view detailed logging in real time, pass the `-v` flag. You can also use
+`--log FILE` to save the log messages to a file.
+
+```bash
+python -m src.crawler -v --log crawler.log
+```
+
 The result will be saved under `csv/output/` with the current date.
 
 ## GitHub Actions
