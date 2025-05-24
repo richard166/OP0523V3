@@ -37,7 +37,8 @@ def detect_encoding(data: bytes) -> str:
 
 
 def read_table(src: Path | bytes, filename: str | None = None) -> pd.DataFrame:
-    """Read CSV/XLSX from path or raw bytes."""
+    """Read CSV/XLSX content from path or raw bytes."""
+
     if isinstance(src, (str, Path)):
         path = Path(src)
         if path.suffix.lower() == ".xlsx":
@@ -45,12 +46,13 @@ def read_table(src: Path | bytes, filename: str | None = None) -> pd.DataFrame:
         data = path.read_bytes()
         enc = detect_encoding(data)
         return pd.read_csv(BytesIO(data), encoding=enc)
-    else:
-        data = src
-        if filename and filename.lower().endswith(".xlsx"):
-            return pd.read_excel(BytesIO(data))
-        enc = detect_encoding(data)
-        return pd.read_csv(BytesIO(data), encoding=enc)
+
+    # src 為 bytes
+    data = src
+    if filename and filename.lower().endswith(".xlsx"):
+        return pd.read_excel(BytesIO(data))
+    enc = detect_encoding(data)
+    return pd.read_csv(BytesIO(data), encoding=enc)
 
 
 def to_e164(phone: str) -> str | None:
@@ -69,7 +71,6 @@ def load_sample(filename: str) -> bytes:
     path = config.DATA_DIR / filename
     return path.read_bytes()
 
-
 def merge_sources(datasets: list[pd.DataFrame | list]) -> pd.DataFrame:
     frames = []
     for d in datasets:
@@ -83,3 +84,4 @@ def merge_sources(datasets: list[pd.DataFrame | list]) -> pd.DataFrame:
     df["電話"] = df["電話"].apply(to_e164)
     df = df.drop_duplicates(subset=["公司名稱", "電話"])
     return df
+

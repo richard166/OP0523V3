@@ -14,6 +14,10 @@ This project collects company contact information from multiple Taiwan-based sou
 * `pip install -r requirements.txt`
 
 ## 執行
+=======
+## Usage
+Run the crawler manually:
+
 ```bash
 python -m src.crawler
 ```

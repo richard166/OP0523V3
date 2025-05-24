@@ -14,8 +14,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[1] / 'csv' / 'output'
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 REQUIRED_COLS = ("公司名稱", "電話", "Email", "官網")
-
-KEYWORDS = ["廣告代理商", "品牌設計", "行銷公司"]
+KEYWORDS = ["廣告代理商", "品牌設計", "行銷公司", "保健品", "生技", "生物科技"]
 CITIES = ["台北", "新北", "桃園", "台中", "台南", "高雄"]
 
 HEADERS = {"User-Agent": USER_AGENT}
