@@ -6,7 +6,9 @@ import pandas as pd
 
 from src import config, utils
 from src.utils import setup_logger
-from src.sources import opendata_api, website_email
+from src.sources import opendata_company, website_email
+
+
 
 def main() -> None:
     p = argparse.ArgumentParser(description="TW company contacts crawler")
@@ -17,7 +19,9 @@ def main() -> None:
     setup_logger(args.verbose, args.log)
 
     datasets = []
-    for source in [opendata_api]:
+
+    for source in [opendata_company]:
+
         try:
             df = source.crawl()
             logging.info('%s entries: %d', source.__name__, len(df))
